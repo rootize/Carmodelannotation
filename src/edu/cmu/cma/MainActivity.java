@@ -47,22 +47,22 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 public class MainActivity extends Activity {
-	//HD image size
+	// HD image size
 	private static final int dstWidth = 1280;
 	private static final int dstHeight = 720;
 	private static final int CAMERA_REQUEST = 1888;
 	private static final String tmpImgname = "tmpimg.jpg";
 	private MyImageView imageView;
-	//private Point centerROI;
-	//private Bitmap orgBitmap;
+	// private Point centerROI;
+	// private Bitmap orgBitmap;
 	private File tmpStorage;
-	
-	
-	
-	//GUI items
+
+	// GUI items
 	private Spinner carmakeSpinner;
 	private Spinner carmodelSpinner;
-	private Button photoButton;
+	private Button photoButton; // button : take a photo!
+	private Button finishButton;
+	private Button clear_rectButton;
 
 	private int select_item_id;
 	private String[] items = { "Use 4G anyway", "Abort image ,quit now",
@@ -70,15 +70,16 @@ public class MainActivity extends Activity {
 	private String selectedItem = "";
 	private AlertDialog wifi_dialog;
 
-	private String carmake = "";
-	private String carmodel = "";
+	/*
+	 * private String carmake = ""; private String carmodel = "";
+	 */
 
 	// Data to Send :
 	private ParseObject pb_send;
 
 	private File mMakeModel;
 
-	//GPS information
+	// GPS information
 	GPSTracker gps;
 	// TODO database related!
 	private static final String DATABASE_TABLE_NAME = "carmakemodel";
@@ -88,58 +89,57 @@ public class MainActivity extends Activity {
 	private static final String CAR_MODEL = "carmodel";
 	private SQLiteDatabase carDatabase;
 
-	private String make_selectString="";
-	private String model_selectString="";
-	String model_select_array="";
 	
+	
+	
+	private String make_selectString = "";
+	private String model_selectString = "";
+	String model_select_SQL_String = "";
+    String make_select_SQL_String="";
 	/***********************************
 	 * Things you should send to the server!
 	 * 
 	 ************************************/
 	// check if it has GPS data
 	// how long does it take to get gps data
-	// check 
+	// check
 	private Point Rect_TL; // rectangle top_left
 	private Point Rect_BR; // rectangle bottom_right
-	//private LocationManager mLocationManager=null;
+	// private LocationManager mLocationManager=null;
 	private Bitmap bitmap_toSend;
-	private String car_Make="";
-	private String car_Model="";
-	private double latitude=0;
-	private double longitude=0;
-	private double  altitude=0;
-	
-	
-	
-	
-	/* (non-Javadoc)
+	private String car_Make = "";
+	private String car_Model = "";
+	private double latitude = 0;
+	private double longitude = 0;
+	private double altitude = 0;
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		//mLocationManager.requestLocationUpdates(, minDistance, 1, intent)
+		
 		super.onResume();
 	}
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Setting up parse analysis key and id
+		
 
-		
-		//Part 1: Location--get GPS information
-		gps=new GPSTracker(MainActivity.this);
-		
-		
-		
-		
+		// Part 1: Location--get GPS information
+		gps = new GPSTracker(MainActivity.this);
+        
+		// Part 2: connect to parse server
 		Parse.initialize(this, "jAj3JiDwBuIvLzRejnBNBnF0nAY0pgNkbf01j6Ov",
 				"xC51p1SSoacrunqRAYe2KnwHZ1QjvJyaRflwSNJt");
 		ParseAnalytics.trackAppOpened(getIntent());
 
-		centerROI = new Point();
+		
+		
 		setContentView(R.layout.activity_main);
 		this.imageView = (MyImageView) this.findViewById(R.id.iview1);
 
@@ -256,7 +256,7 @@ public class MainActivity extends Activity {
 						}
 
 					} catch (FileNotFoundException e) {
-						
+
 						e.printStackTrace();
 					}
 					// FIXME
@@ -270,22 +270,24 @@ public class MainActivity extends Activity {
 					pb_send.saveInBackground();
 					ParseFile imgParseFile = new ParseFile("img.jpeg", data);
 					imgParseFile.saveInBackground();
-					AlertDialog.Builder Sending_Finish_Dialog=
-							new AlertDialog.Builder(MainActivity.this).setCancelable(false);
-					
-					
+					AlertDialog.Builder Sending_Finish_Dialog = new AlertDialog.Builder(
+							MainActivity.this).setCancelable(false);
+
 					Sending_Finish_Dialog.setTitle("Done Sending!");
-					Sending_Finish_Dialog.setMessage("Sent Successfully! Thanks");
-					Sending_Finish_Dialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							
-						}
-					} );
+					Sending_Finish_Dialog
+							.setMessage("Sent Successfully! Thanks");
+					Sending_Finish_Dialog.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+
+								}
+							});
 					Sending_Finish_Dialog.show();
-					
+
 				}
 
 			}
@@ -408,81 +410,76 @@ public class MainActivity extends Activity {
 		make_dataAdapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		carmakeSpinner.setAdapter(make_dataAdapter);
-		
-		
-		
-		carmodelSpinner=(Spinner)findViewById(R.id.modelspinner);
-		 model_select_array="SELECT DISTINCT " + CAR_MODEL + " from "
+
+		carmodelSpinner = (Spinner) findViewById(R.id.modelspinner);
+		model_select_array = "SELECT DISTINCT " + CAR_MODEL + " from "
 				+ DATABASE_TABLE_NAME;
-		if (""==make_selectString) {
-			//Select all: model_select_array do nothing
-		}else {
-			//model_select_array+=" where "+CAR_MAKE+" ='"+make_selectString+"';";
-			
+		if ("" == make_selectString) {
+			// Select all: model_select_array do nothing
+		} else {
+			// model_select_array+=" where "+CAR_MAKE+" ='"+make_selectString+"';";
+
 		}
-		//List<String>model_label=new ArrayList<String>();
+		// List<String>model_label=new ArrayList<String>();
 		List<String> model_label = getAllLabels(model_select_array);
 		ArrayAdapter<String> model_dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, model_label);
 		model_dataAdapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		carmodelSpinner.setAdapter(model_dataAdapter);
-		
-		
+
 		carmakeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				make_selectString=arg0.getItemAtPosition(arg2).toString();
-				String refresh_model=model_select_array+" where "+CAR_MAKE+" ='"+make_selectString+"';";
+				make_selectString = arg0.getItemAtPosition(arg2).toString();
+				String refresh_model = model_select_array + " where "
+						+ CAR_MAKE + " ='" + make_selectString + "';";
 				setNewSpinner(refresh_model);
 			}
-
-			
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// TODO Auto-generated method stub
-				make_selectString="";
+				make_selectString = "";
 			}
-		}) ;
+		});
 		carmodelSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				model_selectString=arg0.getItemAtPosition(arg2).toString();
+				model_selectString = arg0.getItemAtPosition(arg2).toString();
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// TODO Auto-generated method stub
-				model_selectString="";
+				model_selectString = "";
 			}
-		}) ;
+		});
 	}
 
-	
 	private void setNewSpinner(String newSelect_String) {
 		// TODO Auto-generated method stub
-		
+
 		List<String> model_label = getAllLabels(newSelect_String);
 		ArrayAdapter<String> model_dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, model_label);
 		model_dataAdapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		carmodelSpinner.setAdapter(model_dataAdapter);
-		
-		
+
 	}
+
 	private List<String> getAllLabels(String select_array) {
 		List<String> labels = new ArrayList<String>();
 
 		Cursor cursor = carDatabase.rawQuery(select_array, null);
-		//Log.d("Cursor Size", "" + cursor.getCount());
+		// Log.d("Cursor Size", "" + cursor.getCount());
 		// Log.d("Function:getAllLabels() 0 column:::", cursor.getString(0));
 		// Log.d("Function:getAllLabels() 1 column:::", cursor.getString(1));
 		// looping through all rows and adding to list
@@ -514,13 +511,13 @@ public class MainActivity extends Activity {
 		String functionName = "onActivityResult";
 		Log.d(functionName, "Function Called!!!!");
 		if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-//			if (tmpStorage.exists()) {
-//				
-//			}
+			// if (tmpStorage.exists()) {
+			//
+			// }
 			tmpStorage = new File(getFilesDir(), "newImage.jpg");
 			if (!tmpStorage.exists()) {
 				Log.d("OnActivityResult:", "  return at this point!");
-				//return;
+				// return;
 			} else {
 				Log.d("OnActivityResult:", "tmpstorage actually exists!");
 				Bitmap bm = BitmapFactory.decodeFile(tmpStorage
@@ -577,24 +574,23 @@ public class MainActivity extends Activity {
 			}
 
 		}
-        make_selectString="";
-        model_selectString="";
-        
-        
-        //mLocationManager.removeUpdates(onLocationChange);
+		make_selectString = "";
+		model_selectString = "";
+
+		// mLocationManager.removeUpdates(onLocationChange);
 		super.onPause();
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onDestroy()
 	 */
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		gps.stopUsingGPS();//Stop Using GPS data
+		gps.stopUsingGPS();// Stop Using GPS data
 		super.onDestroy();
 	}
-	
 
-	}
+}
