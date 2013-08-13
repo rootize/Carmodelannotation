@@ -1,0 +1,180 @@
+//import java.io.File;
+//
+//import junit.framework.Protectable;
+//
+//import android.media.ExifInterface;
+//import android.net.Uri;
+//import android.os.Bundle;
+//import android.provider.MediaStore;
+//import android.R.layout;
+//import android.R.string;
+//import android.app.Activity;
+//import android.content.Intent;
+//import android.graphics.Bitmap;
+//import android.graphics.BitmapFactory;
+//import android.graphics.Camera;
+//import android.graphics.Matrix;
+//import android.util.Log;
+//import android.view.Menu;
+//import android.view.SurfaceHolder;
+//import android.view.SurfaceView;
+//import android.view.View;
+//import android.widget.Button;
+//
+//public class MainActivity extends Activity {
+//
+//	
+//	private SurfaceView preview=null;
+//	private SurfaceHolder previewHolder=null;
+//	private Camera mCamera=null;
+//	private boolean inPreview=false;
+//	private boolean cameraConfigured=false;
+//	
+//	
+//	
+//	private  static final String PHOTO_TAKEN="photo_taken"; 
+//	
+//	private boolean _taken=false;
+//	
+//	private Button takePhoto;
+//	@Override
+//	protected void onCreate(Bundle savedInstanceState) {
+//		super.onCreate(savedInstanceState);
+//		setContentView(R.layout.activity_main);
+//		preview= (SurfaceView) findViewById(R.id.preview);
+//		previewHolder=preview.getHolder();
+//		previewHolder.addCallback(surfaceCallback);
+//		//previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//		takePhoto=(Button)findViewById(R.id.takephotobutton);
+//		takePhoto.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				//Take a camera capture here in order to take a photo
+//				startCameraActivity();
+//			}
+//
+//			private void startCameraActivity() {
+//				// TODO Auto-generated method stub
+//				
+//				File file=new File(_path);//The path of storage 
+//				Uri outputFileUri=Uri.fromFile(file);
+//				final Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//				intent.putExtra(MediaStore.EXTRA_OUTPUT,outputFileUri );
+//				startActivityForResult(intent, 0);
+//				
+//			}
+//		});
+//		
+//		
+//		
+//	}
+//
+//	/* (non-Javadoc)
+//	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+//	 */
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		// TODO Auto-generated method stub
+//		if(-1==resultCode)
+//		{
+//			onPhotoTaken();
+//			
+//		}else{
+//			Log.v(TAG, "User Cancelled");
+//		}
+//		super.onActivityResult(requestCode, resultCode, data);
+//	}
+//
+//	
+//	
+//	
+//	private void onPhotoTaken() {
+//		// TODO Auto-generated method stub
+//		_taken=true;
+//		String function_name="onPhotoTaken()";
+//		BitmapFactory.Options options=new BitmapFactory.Options();
+//		options.inSampleSize=4;
+//		Bitmap bitmap=BitmapFactory.decodeFile(_path,options);
+//		try {
+//			ExifInterface exif=new ExifInterface(_path);
+//			int exifOrientation=exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+//			int rotate=0;
+//			switch (exifOrientation) {
+//			case ExifInterface.ORIENTATION_ROTATE_90:
+//				rotate=90;
+//				break;
+//			case ExifInterface.ORIENTATION_ROTATE_180:
+//				rotate=180;
+//				break;
+//			case ExifInterface.ORIENTATION_ROTATE_270:
+//				rotate=270;
+//				break;
+//			default:
+//				Log.d(function_name, "None of the switch case selected");
+//				break;
+//			}
+//			
+//			
+//			if (rotate!=0) {
+//				int w=bitmap.getWidth();
+//				int h=bitmap.getHeight();
+//				
+//				
+//				Matrix mtx=new Matrix();
+//			    mtx.preRotate(rotate);
+//			    bitmap=Bitmap.createBitmap(bitmap,0,0,w,h,mtx,false);
+//			    
+//			}
+//			
+//			bitmap=bitmap.copy(Bitmap.Config.ARGB_8888,true);
+//			
+//		} catch (Exception e) {
+//			
+//			Log.e(function_name, "Could NOT correct orientation");
+//			// TODO: handle exception
+//		}
+//		
+//		
+//		
+//	}
+//
+//	/* (non-Javadoc)
+//	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+//	 */
+//	@Override
+//	protected void onSaveInstanceState(Bundle outState) {
+//		// TODO Auto-generated method stub
+//		outState.putBoolean(MainActivity.PHOTO_TAKEN, _taken);
+//		
+//		super.onSaveInstanceState(outState);
+//	}
+//
+//	
+//	
+//	
+//	/* (non-Javadoc)
+//	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+//	 */
+//	@Override
+//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//		// TODO Auto-generated method stub
+//		
+//		if (savedInstanceState.getBoolean(MainActivity.PHOTO_TAKEN)) {
+//			onPhotoTaken();
+//		}
+//		super.onRestoreInstanceState(savedInstanceState);
+//	}
+//	
+//	//private void 
+//
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+//	}
+//
+//}
+

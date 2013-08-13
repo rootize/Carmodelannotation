@@ -1,0 +1,10 @@
+This is a project designed to do the following things for Yair Movshovitz-Attias. 
+1. Open camera and take a picture
+2. Annotate on the picture( mark cars in the image, basically the bounding rectangles(two points: upperleft and bottom right))---Draw rectangles on the image
+3. rescale/store the image to HD (1280*720), compress to jpeg, also that the annotation information (points value) should be changed with respect to the change of image size
+4. select make / model from database. automatically change the content.
+5. Send things to Parse (especially the image file(compressed image file!))
+
+
+Some other requirements:
+Nice GUI

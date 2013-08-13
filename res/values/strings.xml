@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CarModelAnnotation</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="buttontakephoto">Take a Photo!</string>
+    <string name="buttonfinish">Done,send to server!</string>
+    <string name="buttoncancel">Give up, take a new photo</string>
+    <string name="buttonquit">Quit</string>
+    <string name="carmakehint">Step 1: \n Select Car Make:</string>
+    <string name="carmodelhint">Step 2: \n Select Car Model:</string>
+    <string name="clear">Clear Rectangle</string>
+    <string name="finishDrawing">Finish Drawing</string>
+</resources>

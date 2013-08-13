@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+  
+    <Button 
+        android:id="@+id/clearDrawing"
+        android:layout_alignParentTop="true" 
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clear"   />
+   <!--  <Button 
+        android:id="@+id/confirmation"
+        android:layout_toRightOf="@id/clearDrawing"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/finishDrawing"/> -->
+ <TextView
+     android:id="@+id/carmaketext"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_alignParentLeft="true"
+    android:layout_below="@id/clearDrawing"
+     android:text="@string/carmakehint" />
+ 
+<Spinner android:id="@+id/makespinner"   
+           android:layout_width="fill_parent"  
+           android:layout_height="wrap_content"
+          
+           android:layout_centerHorizontal="true"
+           android:layout_below="@id/carmaketext">
+    
+</Spinner>
+
+<TextView
+     android:id="@+id/carmodeltext"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_alignParentLeft="true"
+     android:layout_below="@id/makespinner"
+     android:text="@string/carmodelhint" />
+<Spinner
+    android:id="@+id/modelspinner"
+    android:layout_width="fill_parent"
+    android:layout_below="@id/carmodeltext"
+    android:layout_centerHorizontal="true"
+    android:layout_height="wrap_content"    />
+</RelativeLayout>
